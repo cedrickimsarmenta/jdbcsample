@@ -8,5 +8,5 @@ public class Person {
 	private String name;
 	private Date birthday;
 	private BigDecimal balance;
-	private Animal pet;
+	private long petId;
 }

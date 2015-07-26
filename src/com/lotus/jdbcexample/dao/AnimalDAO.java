@@ -9,4 +9,5 @@ public interface AnimalDAO {
 	void delete(Animal a);
 	List<Animal> list();
 	Animal getByName(String name);
+	Animal getById(long id);
 }

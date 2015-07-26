@@ -233,12 +233,46 @@ public class AnimalOJDBDAO implements AnimalDAO {
 			if (rs.next()) {
 				animal = extractAnimalFromResult(rs);
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
 
-			// Try to look for a second result
-			if (rs.next()) {
-				throw new IllegalStateException("More than 1 rows matches animal name: " + name);
+			if(statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					throw new RuntimeException("Unable to close statement");
+				}
 			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					throw new RuntimeException("Unable to close connection");
+				}
+			}
+		}
+		return animal;
+	}
 
+	public Animal getById(long id) {
+		if (id == 0) {
+			throw new IllegalArgumentException("valid id is required");
+		}
+		Animal animal = null;
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = getConnection();
+			statement = connection
+					.prepareStatement("SELECT id, name, aliveYN, energy, species FROM Animals where id = ?");
+			statement.setLong(1, id);
+
+			ResultSet rs = statement.executeQuery();
+
+			if (rs.next()) {
+				animal = extractAnimalFromResult(rs);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
