@@ -30,7 +30,7 @@ public class AnimalOJDBDAO implements AnimalDAO {
 	}
 
 	private static Connection getConnection() throws SQLException {
-		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "cedric",
+		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "ernest",
 				"password");
 		connection.setAutoCommit(false);
 		return connection;
@@ -52,11 +52,15 @@ public class AnimalOJDBDAO implements AnimalDAO {
 			connection.commit();
 		} catch (SQLException e) {
 			try {
-				connection.rollback();
+				if(connection != null){
+					connection.rollback();
+				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
+				
 			}
 			e.printStackTrace();
+			throw new RuntimeException("Database error.");
 		} finally {
 
 			if(statement != null) {
@@ -185,6 +189,7 @@ public class AnimalOJDBDAO implements AnimalDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new RuntimeException("Database error.");
 		} finally {
 
 			if(statement != null) {
@@ -235,6 +240,7 @@ public class AnimalOJDBDAO implements AnimalDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new RuntimeException("Database error.");
 		} finally {
 
 			if(statement != null) {
